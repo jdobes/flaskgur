@@ -35,9 +35,12 @@ install -m 644 conf/systemd/flaskgur.service %{buildroot}/etc/systemd/system/
 mkdir -p %{buildroot}/var/www/flaskgur
 install -m 644 *.py %{buildroot}/var/www/flaskgur/
 install -m 644 *.ini %{buildroot}/var/www/flaskgur/
-install -m 644 pics %{buildroot}/var/www/flaskgur/
-install -m 644 static %{buildroot}/var/www/flaskgur/
-install -m 644 templates %{buildroot}/var/www/flaskgur/
+mkdir -p %{buildroot}/var/www/flaskgur/pics/
+install -m 644 pics/* %{buildroot}/var/www/flaskgur/pics/
+mkdir -p %{buildroot}/var/www/flaskgur/static/
+install -m 644 static/* %{buildroot}/var/www/flaskgur/static/
+mkdir -p %{buildroot}/var/www/flaskgur/templates/
+install -m 644 templates/* %{buildroot}/var/www/flaskgur/templates/
 
 %files
 %defattr(644,root,root)
