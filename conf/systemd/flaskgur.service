@@ -1,0 +1,9 @@
+[Unit]
+Description=uWSGI instance to serve flaskgur
+
+[Service]
+ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/flaskgur; chown root:nginx /run/flaskgur'
+ExecStart=/usr/bin/bash -c 'cd /var/www/flaskgur/; uwsgi --ini flaskgur.ini'
+
+[Install]
+WantedBy=multi-user.target
