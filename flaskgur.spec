@@ -28,7 +28,9 @@ rm -rf %{buildroot}
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/etc/nginx/conf.d/
 install -m 644 conf/nginx/flaskgur.conf %{buildroot}/etc/nginx/conf.d/
+mkdir -p %{buildroot}/etc/systemd/system/
 install -m 644 conf/systemd/flaskgur.service %{buildroot}/etc/systemd/system/
 mkdir -p %{buildroot}/var/www/flaskgur
 install -m 644 *.py %{buildroot}/var/www/flaskgur/
