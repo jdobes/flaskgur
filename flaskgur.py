@@ -85,6 +85,3 @@ def show_pic():
 @app.route('/pics/<filename>')
 def return_pic(filename):
 	return send_from_directory(app.config['UPLOAD_DIR'], secure_filename(filename))
-	
-if __name__ == '__main__':
-	app.run(debug=DEBUG, host='0.0.0.0')
