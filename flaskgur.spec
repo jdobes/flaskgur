@@ -1,10 +1,11 @@
 Name:    flaskgur
 Version: 1.0
 Release: 1%{?dist}
-Summary: Say hello, Texas style
+Summary: Image hosting.
 
 License: GPLv2
 Source0: flaskgur
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires: systemd
 Requires: nginx
@@ -23,6 +24,8 @@ rm -rf %{buildroot}
 %prep
 %setup -q
 
+%build
+
 %install
 rm -rf %{buildroot}
 install -m 644 conf/nginx/flaskgur.conf %{buildroot}/etc/nginx/conf.d/
@@ -35,15 +38,16 @@ install -m 644 static %{buildroot}/var/www/flaskgur/
 install -m 644 templates %{buildroot}/var/www/flaskgur/
 
 %files
+%defattr(644,root,root)
 %config(noreplace) /etc/nginx/conf.d/flaskgur.conf
-config /etc/systemd/system/flaskgur.service
-%dir /var/www/flaskgur/
+/etc/systemd/system/flaskgur.service
+%attr(755,root,root) %dir /var/www/flaskgur/
 /var/www/flaskgur/*
-%dir /var/www/flaskgur/pics/
+%attr(755,root,root) %dir /var/www/flaskgur/pics/
 /var/www/flaskgur/pics/blank
-%dir /var/www/flaskgur/static/
+%attr(755,root,root) %dir /var/www/flaskgur/static/
 /var/www/flaskgur/static/*
-%dir /var/www/flaskgur/templates/
+%attr(755,root,root) %dir /var/www/flaskgur/templates/
 /var/www/flaskgur/templates/*
 
 %changelog
