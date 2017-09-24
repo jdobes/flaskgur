@@ -1,6 +1,6 @@
 Name:    flaskgur
 Version: 1.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Image hosting.
 
 License: GPLv2
@@ -60,6 +60,7 @@ install -m 644 templates/* %{buildroot}/var/www/flaskgur/templates/
 /var/www/flaskgur/templates/*
 
 %changelog
-* Fri Sep 22 2017 Jan Dobes <git@owny.cz> 1.0-4
+* Fri Sep 22 2017 Jan Dobes <git@owny.cz> 1.0-5
 - initial release
+- added postgresql support
 

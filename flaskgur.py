@@ -2,15 +2,15 @@ from flask import Flask, request, g, redirect, url_for, abort, render_template, 
 from werkzeug import secure_filename
 from hashlib import md5
 from PIL import Image
-import sqlite3
 import os
 import time
+import psycopg2
 
-DEBUG              = True
-BASE_DIR           = '/var/www/changeme/flaskgur'
+DEBUG              = False
+BASE_DIR           = '/var/www/flaskgur'
 UPLOAD_DIR         = os.path.join(BASE_DIR, 'pics')
-DATABASE           = os.path.join(BASE_DIR, 'flaskgur.db')
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+DB_STRING = "dbname=fgschema user=fguser password=fgpw host=localhost"
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -20,18 +20,18 @@ def check_extension(extension):
 	return extension in ALLOWED_EXTENSIONS
 
 def connect_db():
-	return sqlite3.connect(app.config['DATABASE'])
+	return psycopg2.connect(DB_STRING)
 
 # Return a list of the last 25 uploaded images	
 def get_last_pics():
-	cur = g.db.execute('select filename from pics order by id desc limit 25')
-	filenames = [row[0] for row in cur.fetchall()]
+	g.cur.execute('select filename from fgPics order by id desc limit 25')
+	filenames = [row[0] for row in g.cur.fetchall()]
 	return filenames
 
 # Insert filename into database	
 def add_pic(filename):
-	g.db.execute('insert into pics (filename) values (?)', [filename])
-	g.db.commit()
+	g.cur.execute('insert into fgPics (filename) values (%s)', (filename,))
+	g.conn.commit()
 
 # Generate thumbnail image
 def gen_thumbnail(filename):
@@ -43,14 +43,18 @@ def gen_thumbnail(filename):
 # Taken from flask example app
 @app.before_request
 def before_request():
-    g.db = connect_db()
+    g.conn = connect_db()
+    g.cur = g.conn.cursor()
     
 # Taken from flask example app
 @app.teardown_request
 def teardown_request(exception):
-    db = getattr(g, 'db', None)
-    if db is not None:
-        db.close()
+    cur = getattr(g, 'cur', None)
+    conn = getattr(g, 'conn', None)
+    if cur is not None:
+        cur.close()
+    if conn is not None:
+        conn.close()
         
 @app.errorhandler(404)
 def page_not_found(e):
