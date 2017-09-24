@@ -2,21 +2,37 @@
 
 export PGPASSWORD="fgpw"
 
-if [ "$1" == "init" ]; then
-    echo "Initializing flaskgur schema."
+function init {
     psql -h localhost -U fguser -d fgschema <<EOF
 CREATE TABLE fgPics (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     extension TEXT NOT NULL );
 EOF
-elif [ "$1" == "query" ]; then
-    psql -h localhost -U fguser -d fgschema
-elif [ "$1" == "destroy" ]; then
-    echo "Destroying flaskgur schema."
+}
+
+function destroy {
     psql -h localhost -U fguser -d fgschema <<EOF
 DROP TABLE IF EXISTS fgPics;
 EOF
+}
+
+function query {
+    psql -h localhost -U fguser -d fgschema
+}
+
+if [ "$1" == "init" ]; then
+    echo "Initializing flaskgur schema."
+    init
+elif [ "$1" == "query" ]; then
+    query
+elif [ "$1" == "destroy" ]; then
+    echo "Destroying flaskgur schema."
+    destroy
+elif [ "$1" == "clear" ]; then
+    echo "Clearing flaskgur schema."
+    destroy
+    init
 else
-    echo "fgdb init|query|destroy"
+    echo "fgdb init|query|destroy|clear"
 fi
