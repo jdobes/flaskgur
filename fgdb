@@ -1,0 +1,17 @@
+#!/usr/bin/bash
+
+export PGPASSWORD="fgpw"
+
+if [ "$1" == "init" ]; then
+    echo "Initializing flaskgur schema."
+    psql -h localhost -U fguser -d fgschema <<EOF
+DROP TABLE IF EXISTS fgPics;
+CREATE TABLE fgPics (
+    id SERIAL PRIMARY KEY,
+    filename TEXT NOT NULL );
+EOF
+elif [ "$1" == "query" ]; then
+    psql -h localhost -U fguser -d fgschema
+else
+    echo "fgdb init|query"
+fi
