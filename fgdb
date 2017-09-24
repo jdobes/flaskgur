@@ -8,7 +8,8 @@ if [ "$1" == "init" ]; then
 DROP TABLE IF EXISTS fgPics;
 CREATE TABLE fgPics (
     id SERIAL PRIMARY KEY,
-    filename TEXT NOT NULL );
+    name TEXT NOT NULL,
+    extension TEXT NOT NULL );
 EOF
 elif [ "$1" == "query" ]; then
     psql -h localhost -U fguser -d fgschema

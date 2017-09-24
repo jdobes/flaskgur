@@ -27,14 +27,14 @@ def connect_db():
 
 # Return a list of the last 25 uploaded images	
 def get_last_pics():
-    g.cur.execute('select filename from fgPics order by id desc limit 25')
-    filenames = [row[0] for row in g.cur.fetchall()]
+    g.cur.execute('select name, extension from fgPics order by id desc limit 25')
+    filenames = [row[0] + '.' + row[1] for row in g.cur.fetchall()]
     return filenames
 
 
 # Insert filename into database	
-def add_pic(filename):
-    g.cur.execute('insert into fgPics (filename) values (%s)', (filename,))
+def add_pic(name, extension):
+    g.cur.execute('insert into fgPics (name, extension) values (%s, %s)', (name, extension,))
     g.conn.commit()
 
 
@@ -80,10 +80,11 @@ def upload_pic():
             abort(404)
         if new_file and check_extension(extension):
             # Salt and hash the file contents
-            filename = md5(new_file.read() + str(round(time.time() * 1000))).hexdigest() + '.' + extension
+            name = md5(new_file.read() + str(round(time.time() * 1000))).hexdigest()
+            filename = name + '.' + extension
             new_file.seek(0)  # Move cursor back to beginning so we can write to disk
             new_file.save(os.path.join(app.config['UPLOAD_DIR'], filename))
-            add_pic(filename)
+            add_pic(name, extension)
             gen_thumbnail(filename)
             return redirect(url_for('show_pic', filename=filename))
         else:  # Bad file extension
