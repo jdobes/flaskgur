@@ -14,6 +14,7 @@ Requires: python-pillow
 Requires: uwsgi
 Requires: uwsgi-plugin-python
 Requires: postgresql
+Requires: python-psycopg2
 
 %description
 Simple image hosting site written with Flask and Python.
